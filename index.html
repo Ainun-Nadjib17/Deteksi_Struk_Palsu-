@@ -1,264 +1,235 @@
-<!DOCTYPE html>
-<html lang="id">
+<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StrukAI - Deteksi Struk Palsu</title>
-    <meta name="description" content="Aplikasi AI cerdas untuk mendeteksi keaslian struk transaksi Anda.">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet">
+<title>StrukAI - Deteksi Struk Palsu</title>
 
-    <!-- Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+<meta name="description" content="Aplikasi AI cerdas untuk mendeteksi keaslian struk transaksi Anda.">
 
-    <!-- CSS -->
-    <link rel="stylesheet" href="css/style.css">
+<!-- Google Fonts -->
 
-    <!-- Anti Copy CSS -->
-    <style>
-        body {
-            user-select: none;
-            -webkit-user-select: none;
-        }
-    </style>
-</head>
+<link rel="preconnect" href="https://fonts.googleapis.com">
 
-<body>
-    <div class="background-elements">
-        <div class="blob blob-1"></div>
-        <div class="blob blob-2"></div>
-    </div>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <main class="container">
-        <header class="hero">
-            <div class="header-top" style="display: flex; justify-content: flex-end; margin-bottom: 1rem;">
-                <button class="btn btn-text" id="btn-settings" title="Pengaturan API">
-                    <i class="ri-settings-3-line" style="font-size: 1.5rem;"></i>
-                </button>
-            </div>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
 
-            <div class="logo">
-                <i class="ri-search-eye-line"></i>
-                <span>StrukAI</span>
-            </div>
+    rel="stylesheet">
 
-            <h1>Deteksi Struk Palsu dengan AI</h1>
-            <p>Unggah gambar struk Anda, dan biarkan AI kami menganalisis keasliannya dalam hitungan detik.</p>
-        </header>
+<!-- Icons -->
 
-        <section class="scanner-card glass-panel">
-            <div class="upload-area" id="upload-area">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
 
-                <input type="file" id="file-input" accept="image/*" hidden>
+<!-- CSS -->
 
-                <div class="upload-content">
-                    <i class="ri-upload-cloud-2-line upload-icon"></i>
+<link rel="stylesheet" href="css/style.css">
 
-                    <h3>Pilih atau Tarik Gambar Struk</h3>
+</head><body><div class="background-elements">
 
-                    <p>Mendukung JPG, PNG (Max 5MB)</p>
+    <div class="blob blob-1"></div>
 
-                    <button class="btn btn-primary" id="btn-browse">
-                        Jelajahi File
-                    </button>
-                </div>
+    <div class="blob blob-2"></div>
 
-                <div class="preview-area hidden" id="preview-area">
-                    <img id="image-preview" src="" alt="Preview">
+</div>
 
-                    <div class="preview-actions">
-                        <button class="btn btn-outline" id="btn-remove">
-                            <i class="ri-delete-bin-line"></i>
-                            Ganti
-                        </button>
 
-                        <button class="btn btn-primary" id="btn-scan">
-                            <i class="ri-scan-2-line"></i>
-                            Pindai Sekarang
-                        </button>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Loading State -->
-            <div class="loading-state hidden" id="loading-state">
-                <div class="scanner-animation">
-                    <div class="scanner-line"></div>
-                </div>
+<main class="container">
 
-                <p>AI sedang menganalisis struk Anda...</p>
-            </div>
+    <header class="hero">
 
-            <!-- Result State -->
-            <div class="result-area hidden" id="result-area">
-                <div class="result-header" id="result-status">
-                    <!-- Status will be injected here -->
-                </div>
+        <div class="header-top" style="display: flex; justify-content: flex-end; margin-bottom: 1rem;">
 
-                <div class="result-body">
-                    <h4>Alasan Analisis:</h4>
-                    <p id="result-reason"></p>
-                </div>
+            <button class="btn btn-text" id="btn-settings" title="Pengaturan API"><i class="ri-settings-3-line"
 
-                <button class="btn btn-outline w-full mt-4" id="btn-new-scan">
-                    Pindai Struk Lain
-                </button>
-            </div>
-        </section>
+                    style="font-size: 1.5rem;"></i></button>
 
-        <section class="history-section">
-            <div class="section-header">
-                <h2>Riwayat Pemindaian</h2>
-
-                <button class="btn btn-text" id="btn-refresh-history">
-                    <i class="ri-refresh-line"></i>
-                    Segarkan
-                </button>
-            </div>
-
-            <div class="history-list" id="history-list">
-                <!-- History items will be injected here -->
-                <div class="empty-state">
-                    Belum ada riwayat pemindaian.
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- Settings Modal -->
-    <div class="modal-overlay hidden" id="settings-modal">
-        <div class="modal-content glass-panel">
-
-            <div class="modal-header">
-                <h3>Pengaturan Konfigurasi</h3>
-
-                <button class="btn btn-text" id="btn-close-settings">
-                    <i class="ri-close-line"></i>
-                </button>
-            </div>
-
-            <div class="modal-body">
-                <p style="margin-bottom: 1rem; font-size: 0.9rem;">
-                    API Key disimpan secara lokal di browser Anda
-                    (LocalStorage) sehingga Anda tidak perlu memasukkannya
-                    setiap kali membuka web ini.
-                </p>
-
-                <div class="input-group">
-                    <label for="gemini-key-input">Gemini API Key</label>
-
-                    <input type="password" id="gemini-key-input" placeholder="Masukkan Gemini API Key Anda (AIza...)"
-                        value="" autocomplete="on">
-
-                    <small>
-                        Dapatkan dari
-                        <a href="https://aistudio.google.com/" target="_blank" style="color: var(--primary);">
-                            Google AI Studio
-                        </a>
-                    </small>
-                </div>
-            </div>
-
-            <div class="modal-footer">
-                <button class="btn btn-primary w-full" id="btn-save-settings">
-                    Simpan Konfigurasi
-                </button>
-            </div>
         </div>
+
+        <div class="logo">
+
+            <i class="ri-search-eye-line"></i>
+
+            <span>StrukAI</span>
+
+        </div>
+
+        <h1>Deteksi Struk Palsu dengan AI</h1>
+
+        <p>Unggah gambar struk Anda, dan biarkan AI kami menganalisis keasliannya dalam hitungan detik.</p>
+
+    </header>
+
+
+
+    <section class="scanner-card glass-panel">
+
+        <div class="upload-area" id="upload-area">
+
+            <input type="file" id="file-input" accept="image/*" hidden>
+
+            <div class="upload-content">
+
+                <i class="ri-upload-cloud-2-line upload-icon"></i>
+
+                <h3>Pilih atau Tarik Gambar Struk</h3>
+
+                <p>Mendukung JPG, PNG (Max 5MB)</p>
+
+                <button class="btn btn-primary" id="btn-browse">Jelajahi File</button>
+
+            </div>
+
+            <div class="preview-area hidden" id="preview-area">
+
+                <img id="image-preview" src="" alt="Preview">
+
+                <div class="preview-actions">
+
+                    <button class="btn btn-outline" id="btn-remove"><i class="ri-delete-bin-line"></i>
+
+                        Ganti</button>
+
+                    <button class="btn btn-primary" id="btn-scan"><i class="ri-scan-2-line"></i> Pindai
+
+                        Sekarang</button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- Loading State -->
+
+        <div class="loading-state hidden" id="loading-state">
+
+            <div class="scanner-animation">
+
+                <div class="scanner-line"></div>
+
+            </div>
+
+            <p>AI sedang menganalisis struk Anda...</p>
+
+        </div>
+
+
+
+        <!-- Result State -->
+
+        <div class="result-area hidden" id="result-area">
+
+            <div class="result-header" id="result-status">
+
+                <!-- Status will be injected here -->
+
+            </div>
+
+            <div class="result-body">
+
+                <h4>Alasan Analisis:</h4>
+
+                <p id="result-reason"></p>
+
+            </div>
+
+            <button class="btn btn-outline w-full mt-4" id="btn-new-scan">Pindai Struk Lain</button>
+
+        </div>
+
+    </section>
+
+
+
+    <section class="history-section">
+
+        <div class="section-header">
+
+            <h2>Riwayat Pemindaian</h2>
+
+            <button class="btn btn-text" id="btn-refresh-history"><i class="ri-refresh-line"></i> Segarkan</button>
+
+        </div>
+
+        <div class="history-list" id="history-list">
+
+            <!-- History items will be injected here -->
+
+            <div class="empty-state">Belum ada riwayat pemindaian.</div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+
+<!-- Settings Modal -->
+
+<div class="modal-overlay hidden" id="settings-modal">
+
+    <div class="modal-content glass-panel">
+
+        <div class="modal-header">
+
+            <h3>Pengaturan Konfigurasi</h3>
+
+            <button class="btn btn-text" id="btn-close-settings"><i class="ri-close-line"></i></button>
+
+        </div>
+
+        <div class="modal-body">
+
+            <p style="margin-bottom: 1rem; font-size: 0.9rem;">API Key disimpan secara lokal di browser Anda
+
+                (LocalStorage) sehingga Anda tidak perlu memasukkannya setiap kali membuka web ini.</p>
+
+            <div class="input-group">
+
+                <label for="gemini-key-input">Gemini API Key</label>
+
+                <input type="password" id="gemini-key-input" placeholder="Masukkan Gemini API Key Anda (AIza...)"
+
+                    value="AIzaSyBnJTUh3kEydmzEcqIIAeUcSvx9BalWtdM">
+
+                <small>Dapatkan dari <a href="https://aistudio.google.com/" target="_blank"
+
+                        style="color: var(--primary);">Google AI Studio</a></small>
+
+            </div>
+
+        </div>
+
+        <div class="modal-footer">
+
+            <button class="btn btn-primary w-full" id="btn-save-settings">Simpan Konfigurasi</button>
+
+        </div>
+
     </div>
 
-    <!-- Supabase SDK -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</div>
 
-    <!-- App Scripts -->
-    <script src="js/config.js"></script>
-    <script src="js/supabase-client.js"></script>
-    <script src="js/gemini-client.js"></script>
-    <script src="js/app.js"></script>
 
-    <!-- Auto Fill Gemini API Key -->
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
 
-            const apiKey = "AIzaSyBnJTUh3kEydmzEcqIIAeUcSvx9BalWtdM";
+<!-- Supabase SDK -->
 
-            // Simpan otomatis ke LocalStorage
-            localStorage.setItem("gemini_api_key", apiKey);
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-            // Isi otomatis input konfigurasi
-            const input = document.getElementById("gemini-key-input");
 
-            if (input) {
-                input.value = apiKey;
-            }
 
-        });
-    </script>
+<!-- App Scripts -->
 
-    <!-- Anti Copy & Anti Inspect -->
-    <script>
+<script src="js/config.js"></script>
 
-        // Disable Right Click
-        document.addEventListener("contextmenu", (e) => {
-            e.preventDefault();
-        });
+<script src="js/supabase-client.js"></script>
 
-        // Disable Copy
-        document.addEventListener("copy", (e) => {
-            e.preventDefault();
-        });
+<script src="js/gemini-client.js"></script>
 
-        // Disable Cut
-        document.addEventListener("cut", (e) => {
-            e.preventDefault();
-        });
+<script src="js/app.js"></script>
 
-        // Disable Drag
-        document.addEventListener("dragstart", (e) => {
-            e.preventDefault();
-        });
-
-        // Disable Text Select
-        document.addEventListener("selectstart", (e) => {
-            e.preventDefault();
-        });
-
-        // Disable Keyboard Shortcuts
-        document.addEventListener("keydown", (e) => {
-
-            // Block F12
-            if (e.key === "F12") {
-                e.preventDefault();
-            }
-
-            // Block Ctrl combinations
-            if (e.ctrlKey) {
-
-                const blockedKeys = [
-                    "c", // copy
-                    "u", // view source
-                    "s", // save
-                    "a", // select all
-                    "x", // cut
-                    "p", // print
-                    "i", // inspect
-                    "j"  // devtools
-                ];
-
-                if (blockedKeys.includes(e.key.toLowerCase())) {
-                    e.preventDefault();
-                }
-            }
-
-        });
-
-    </script>
-
-</body>
-
-</html>
+</body></html> 
